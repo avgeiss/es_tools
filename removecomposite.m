@@ -19,10 +19,10 @@ sz = size(in);
 in = reshape(in,[sz(1) prod(sz(2:end))]);
 
 %check for missing data:
-if any(any(isnan(in)) & any(~isnan(in)))
-    warning(['Some of the time-series contain missing data, this breaks the'...
-        ' linear property: deseasonalize(field_mean(data)) = field_mean(deseasonalize(data))']);
-end
+% if any(any(isnan(in)) & any(~isnan(in)))
+%     warning(['Some of the time-series contain missing data, this breaks the'...
+%         ' linear property: deseasonalize(field_mean(data)) = field_mean(deseasonalize(data))']);
+% end
 
 %remove the composite:
 M = nanmean(in);

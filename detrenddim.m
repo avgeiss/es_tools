@@ -17,8 +17,8 @@ end
 
 sz = size(x);
 [x,iperm] = mat2d(x,dim);
-x = anom(x);
 trend = lintrend(x);
 n = size(x,2)-1;
 x = x-trend*(-n/2:n/2);
+x = anom(x);
 x = imat2d(x,iperm,sz);

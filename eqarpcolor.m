@@ -16,6 +16,8 @@ dx = mean(diff(ln(1,:)));
 dy = mean(diff(lt(:,1)'));
 latrange = [min(lt(:)) max(lt(:))]+[-0.0001 0.0001];
 lonrange = [min(ln(:)) max(ln(:))]+[-0.0001 0.0001];
+if lonrange(1) == -0.0001;lonrange(1) = 0;end
+if lonrange(2) == 360.0001;lonrange(2) = 360;end
 
 if ~any(hatch(:));hatch = [];end;
 
@@ -26,17 +28,23 @@ if diff(sign(latrange)) == 0
         %in both hemispheres, use a global equal area projection
         projection = 'eckert4';
         origin = [0 mean(lonrange) 0];
-        ax = axesm('MapProjection',projection,'Grid','on','MapLatLimit',latrange,...
+        if min(abs(latrange))>20
+            %use a conic projection:
+            projection = 'eqaazim';
+            origin=0;
+            latrange = [min(abs(latrange)) 90]*sign(mean(latrange));
+        end
+        ax = axesm('MapProjection',projection,'Grid','off','MapLatLimit',latrange,...
             'MapLonLimit',lonrange,'Origin',origin,'fontsize',12,'MLabelLocation',...
-            lonrange+round((diff(lonrange)/4)*[1 -1]),'labelrotation','on','fontsize',12);
+            lonrange,'labelrotation','off','fontsize',12);
     else
         %otherwise use a conic projection for less distortion:
         projection = 'eqaconicstd';
         origin = [mean(latrange) mean(lonrange) 0];
+        ax = axesm('MapProjection',projection,'Grid','off','MapParallels',latrange,'MapLatLimit',latrange,...
+            'MapLonLimit',lonrange,'Origin',origin,'fontsize',12,'MLabelLocation',...
+            lonrange,'labelrotation','off','fontsize',12);
     end
-    ax = axesm('MapProjection',projection,'Grid','off','MapLatLimit',latrange,...
-        'MapLonLimit',lonrange,'Origin',origin,'fontsize',12,'MLabelLocation',...
-        lonrange,'labelrotation','off','fontsize',12);
 else
     %in both hemispheres, use a global equal area projection
     projection = 'eckert4';
@@ -49,7 +57,7 @@ end
 %create the map axes:
 tightmap;  
 axis off;
-%mlabel on;  plabel on;  
+mlabel on;  plabel on;  
 
 %do the coloring:
 pcolorm(lt,ln,data);
