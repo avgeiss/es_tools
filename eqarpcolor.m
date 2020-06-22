@@ -35,7 +35,7 @@ if diff(sign(latrange)) == 0
             latrange = [min(abs(latrange)) 90]*sign(mean(latrange));
         end
         ax = axesm('MapProjection',projection,'Grid','off','MapLatLimit',latrange,...
-            'MapLonLimit',lonrange,'Origin',origin,'fontsize',12,'MLabelLocation',...
+            'Origin',origin,'fontsize',12,'MLabelLocation',...
             lonrange,'labelrotation','off','fontsize',12);
     else
         %otherwise use a conic projection for less distortion:
@@ -57,7 +57,9 @@ end
 %create the map axes:
 tightmap;  
 axis off;
-mlabel on;  plabel on;  
+if ~(any(ln(:)>355) && any(ln(:)<5))
+    mlabel on;  plabel on;  
+end
 
 %do the coloring:
 pcolorm(lt,ln,data);
@@ -79,5 +81,5 @@ end
 
 %add a landmask:
 load coast;
-geoshow(lat,long,'DisplayType','polygon','FaceColor','k','edgecolor','w');
+geoshow(lat,long,'DisplayType','polygon','FaceColor','k','edgecolor','k');
 %geoshow(lat,long,'displaytype','line','color','black','linewidth',2);

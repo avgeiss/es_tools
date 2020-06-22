@@ -11,6 +11,7 @@ if nargin==2
 else
     m = 64;
 end
+
 %asymmetrical color range around zero
 crange = varargin{1};
 
